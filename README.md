@@ -10,6 +10,30 @@ I fetched each wallet’s full transaction history using the **Etherscan API**. 
 
 ---
 
+## Scoring Method  
+For each wallet I computed:  
+• **borrow_ratio** = (# borrow calls) ÷ (total Compound calls)  
+• **supply_ratio** = (# mint/supply calls) ÷ (total Compound calls)  
+• **repay_count** = total repayBorrow transactions  
+• **unique_methods** = count of distinct Compound function names used  
+• **total_txs** = total Compound transactions  
+
+I then calculated a raw risk metric:  
+text
+raw_risk =
+    1.0 * borrow_ratio
+  – 0.2 * supply_ratio
+  – 0.05 * repay_count
+  – 0.05 * unique_methods
+  – 0.01 * total_txs
+
+ Finally, I inverted and MinMax-scaled -raw_risk into the 0–1000 range so that:
+
+• **0** = most risky
+• **1000** = most safe
+
+---
+
 ## Score Distribution  
 I divided the 0–1000 range into ten 100-point buckets:  
 • 0–100  
